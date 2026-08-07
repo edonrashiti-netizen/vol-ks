@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "title": "VOL-KS Service | Specialized Volvo Service in Kosovo",
+    "description": "Volvo-only specialist workshop in Fushë Kosovë, Uglarë. Advanced diagnostics, periodic maintenance, and professional repair. Call +383 44 288 158."
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About us",
+    "services": "Services",
+    "gallery": "Gallery",
+    "contact": "Contact",
+    "call": "Call"
+  },
+  "hero": {
+    "headline": "Give your car the care it deserves",
+    "sub": "Dedicated expertise for Volvo vehicles only.",
+    "ctaCall": "Call now",
+    "ctaContact": "Contact us"
+  },
+  "about": {
+    "title": "About us",
+    "lead": "The safest address for Volvo in Kosovo.",
+    "body": "VOL-KS Service is a specialized workshop for Volvo vehicles, focused on advanced diagnostics, precise maintenance, and family safety. We are based in Fushë Kosovë, Uglarë — ready to give your car the care it deserves."
+  },
+  "services": {
+    "title": "Services",
+    "lead": "The right service makes the difference in your vehicle’s performance."
+  },
+  "gallery": {
+    "title": "Gallery",
+    "lead": "A look at our work and commitment to Volvo."
+  },
+  "contact": {
+    "title": "Contact",
+    "lead": "Call us, message us, or visit the workshop.",
+    "phone": "Phone",
+    "hours": "Hours",
+    "location": "Location",
+    "social": "Social",
+    "map": "Map"
+  },
+  "footer": {
+    "rights": "All rights reserved."
+  },
+  "admin": {
+    "loginTitle": "Admin login",
+    "password": "Password",
+    "login": "Log in",
+    "logout": "Log out",
+    "services": "Services",
+    "gallery": "Gallery",
+    "save": "Save",
+    "add": "Add",
+    "delete": "Delete",
+    "upload": "Upload photo",
+    "titleSq": "Title (SQ)",
+    "titleEn": "Title (EN)",
+    "descSq": "Description (SQ)",
+    "descEn": "Description (EN)",
+    "altSq": "Alt text (SQ)",
+    "altEn": "Alt text (EN)",
+    "saved": "Saved.",
+    "error": "Something went wrong.",
+    "wrongPassword": "Incorrect password.",
+    "backToSite": "Back to site",
+    "moveUp": "Up",
+    "moveDown": "Down"
+  }
+}

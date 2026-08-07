@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "title": "VOL-KS Service | Servis Volvo në Fushë Kosovë, Kosovë",
+    "description": "Servis i specializuar vetëm për Volvo në Fushë Kosovë, Uglarë. Diagnostikim i avancuar, mirëmbajtje periodike dhe riparim profesional. Telefono: +383 44 288 158."
+  },
+  "nav": {
+    "home": "Ballina",
+    "about": "Rreth nesh",
+    "services": "Shërbimet",
+    "gallery": "Galeria",
+    "contact": "Kontakti",
+    "call": "Telefono"
+  },
+  "hero": {
+    "headline": "Jepi veturës kujdesin që meriton",
+    "sub": "Ekspertizë e dedikuar vetëm për automjetet Volvo.",
+    "ctaCall": "Telefono tani",
+    "ctaContact": "Na kontaktoni"
+  },
+  "about": {
+    "title": "Rreth nesh",
+    "lead": "Adresa më e sigurtë për Volvo në Kosovë.",
+    "body": "VOL-KS Service është servis i specializuar për automjetet Volvo, me fokus në diagnostikim të avancuar, mirëmbajtje të saktë dhe siguri familjare. Ndodhemi në Fushë Kosovë, Uglarë — gati për t’i dhënë veturës suaj kujdesin që meriton."
+  },
+  "services": {
+    "title": "Shërbimet",
+    "lead": "Servisi i duhur bënë diferencën në performancën e automjetit."
+  },
+  "gallery": {
+    "title": "Galeria",
+    "lead": "Një vështrim nga puna dhe angazhimi ynë për Volvo."
+  },
+  "contact": {
+    "title": "Kontakti",
+    "lead": "Na shkruani, na telefononi ose na vizitoni.",
+    "phone": "Telefoni",
+    "hours": "Orari",
+    "location": "Vendndodhja",
+    "social": "Rrjetet sociale",
+    "map": "Harta"
+  },
+  "footer": {
+    "rights": "Të gjitha të drejtat e rezervuara."
+  },
+  "admin": {
+    "loginTitle": "Hyrje në admin",
+    "password": "Fjalëkalimi",
+    "login": "Hyr",
+    "logout": "Dil",
+    "services": "Shërbimet",
+    "gallery": "Galeria",
+    "save": "Ruaj",
+    "add": "Shto",
+    "delete": "Fshi",
+    "upload": "Ngarko foto",
+    "titleSq": "Titulli (SQ)",
+    "titleEn": "Titulli (EN)",
+    "descSq": "Përshkrimi (SQ)",
+    "descEn": "Përshkrimi (EN)",
+    "altSq": "Alt tekst (SQ)",
+    "altEn": "Alt tekst (EN)",
+    "saved": "U ruajt.",
+    "error": "Diçka shkoi keq.",
+    "wrongPassword": "Fjalëkalimi është i gabuar.",
+    "backToSite": "Kthehu te faqja",
+    "moveUp": "Lart",
+    "moveDown": "Poshtë"
+  }
+}

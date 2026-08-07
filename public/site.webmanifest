@@ -1,0 +1,22 @@
+{
+  "name": "VOL-KS Service",
+  "short_name": "VOL-KS",
+  "description": "Specialized Volvo service in Fushë Kosovë, Uglarë.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B254D",
+  "theme_color": "#0B254D",
+  "lang": "sq",
+  "icons": [
+    {
+      "src": "/brand/icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/brand/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

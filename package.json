@@ -1,5 +1,5 @@
 {
-  "name": "vol-ks-tmp",
+  "name": "vol-ks",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,6 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@vercel/blob": "^2.7.0",
+    "jose": "^6.2.8",
     "next": "16.3.0",
     "react": "19.2.8",
     "react-dom": "19.2.8"

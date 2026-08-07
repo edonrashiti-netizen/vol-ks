@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# VOL-KS Service
 
-## Getting Started
+Landing page for **VOL-KS Service** — specialized Volvo workshop in Fushë Kosovë, Uglarë.
 
-First, run the development server:
+- Public site: Albanian default (`/`), English (`/en`)
+- Sections: Ballina, Rreth nesh, Shërbimet, Galeria, Kontakti
+- Admin (`/admin`): edit services and gallery (password protected)
+
+## Local development
 
 ```bash
+npm install
+cp .env.example .env.local
+# set ADMIN_PASSWORD and SESSION_SECRET
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000). Admin: [http://localhost:3000/admin/login](http://localhost:3000/admin/login).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Without `BLOB_READ_WRITE_TOKEN`, content is stored in `data/content.json` and uploads go to `public/uploads/` (local only).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## SEO
 
-## Learn More
+Built-in for Google:
 
-To learn more about Next.js, take a look at the following resources:
+- Metadata, Open Graph, Twitter cards, hreflang (`sq` / `en`)
+- `robots.txt` + `sitemap.xml`
+- JSON-LD LocalBusiness / AutoRepair schema (address, hours, geo, social)
+- Admin routes are noindex
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+After deploy:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Set `NEXT_PUBLIC_SITE_URL=https://vol-ks.com` on Vercel
+2. Submit `https://vol-ks.com/sitemap.xml` in [Google Search Console](https://search.google.com/search-console)
+3. Claim the Google Business Profile for VOL-KS Service (maps listing already exists)
 
-## Deploy on Vercel
+## Environment variables
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Variable | Required | Purpose |
+|----------|----------|---------|
+| `ADMIN_PASSWORD` | Yes | Admin login password |
+| `SESSION_SECRET` | Yes (prod) | Signs the admin session cookie |
+| `NEXT_PUBLIC_SITE_URL` | Yes (prod) | Canonical site URL for SEO (`https://vol-ks.com`) |
+| `BLOB_READ_WRITE_TOKEN` | Yes on Vercel | Persists services/gallery via [Vercel Blob](https://vercel.com/docs/storage/vercel-blob) |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deploy on Vercel + Cloudflare (`vol-ks.com`)
+
+1. Push this repo to GitHub.
+2. Import the project in [Vercel](https://vercel.com).
+3. In the Vercel project:
+   - Add `ADMIN_PASSWORD` and `SESSION_SECRET`
+   - Create a **Blob** store and connect it (sets `BLOB_READ_WRITE_TOKEN`)
+4. Deploy.
+5. In Cloudflare DNS for `vol-ks.com`:
+   - Add a **CNAME** for `@` (or use Vercel nameservers / Cloudflare CNAME flattening) pointing to `cname.vercel-dns.com`
+   - Add **CNAME** `www` → `cname.vercel-dns.com`
+6. In Vercel → Project → Domains, add `vol-ks.com` and `www.vol-ks.com`.
+
+Proxy/SSL on Cloudflare can stay on **Full (strict)** once certificates are issued.
+
+## Brand assets
+
+Source files live in `Brand/`. Runtime copies are in `public/brand`, `public/gallery`, and `public/fonts`.
+
+## Contact (fixed on the site)
+
+- Phone: +383 44 288 158
+- Hours: Monday–Saturday, 08:00–17:00
+- Location: Fushë Kosovë, Uglarë
+- Facebook / Instagram linked in Contact
