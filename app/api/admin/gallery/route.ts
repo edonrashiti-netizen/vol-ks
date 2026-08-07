@@ -20,8 +20,10 @@ export async function PUT(request: Request) {
     }
     const content = await saveGallery(body.gallery);
     return NextResponse.json({ gallery: content.gallery });
-  } catch {
-    return NextResponse.json({ error: "server" }, { status: 500 });
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Diçka shkoi keq.";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
@@ -47,8 +49,10 @@ export async function POST(request: Request) {
     };
     const next = await saveGallery([...content.gallery, item]);
     return NextResponse.json({ item: next.gallery[next.gallery.length - 1] });
-  } catch {
-    return NextResponse.json({ error: "server" }, { status: 500 });
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Diçka shkoi keq.";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 

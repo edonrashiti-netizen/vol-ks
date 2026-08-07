@@ -15,7 +15,9 @@ export async function PUT(request: Request) {
     }
     const content = await saveServices(body.services);
     return NextResponse.json({ services: content.services });
-  } catch {
-    return NextResponse.json({ error: "server" }, { status: 500 });
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Diçka shkoi keq.";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

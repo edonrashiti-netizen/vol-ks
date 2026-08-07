@@ -65,9 +65,17 @@ export async function saveContent(content: SiteContent): Promise<void> {
 
   if (hasBlobToken()) {
     await writeBlob(normalized);
-  } else {
-    await writeLocal(normalized);
+    return;
   }
+
+  // Vercel serverless filesystem is not writable/persistent.
+  if (process.env.VERCEL) {
+    throw new Error(
+      "BLOB_READ_WRITE_TOKEN mungon. Krijo Vercel Blob store dhe ridéploy.",
+    );
+  }
+
+  await writeLocal(normalized);
 }
 
 export async function saveServices(services: ServiceItem[]): Promise<SiteContent> {
@@ -93,6 +101,12 @@ export async function uploadGalleryImage(
       addRandomSuffix: true,
     });
     return { url: blob.url };
+  }
+
+  if (process.env.VERCEL) {
+    throw new Error(
+      "BLOB_READ_WRITE_TOKEN mungon. Krijo Vercel Blob store dhe ridéploy.",
+    );
   }
 
   const uploadsDir = path.join(process.cwd(), "public", "uploads");

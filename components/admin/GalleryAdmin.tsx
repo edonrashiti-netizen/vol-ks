@@ -51,9 +51,15 @@ export function GalleryAdmin({ initialGallery }: Props) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ gallery }),
       });
-      if (!res.ok) throw new Error("fail");
-      const data = (await res.json()) as { gallery: GalleryItem[] };
-      setGallery(data.gallery);
+      const data = (await res.json()) as {
+        gallery?: GalleryItem[];
+        error?: string;
+      };
+      if (!res.ok) {
+        setMessage(data.error || "Diçka shkoi keq.");
+        return;
+      }
+      if (data.gallery) setGallery(data.gallery);
       setMessage("U ruajt.");
     } catch {
       setMessage("Diçka shkoi keq.");
@@ -73,9 +79,15 @@ export function GalleryAdmin({ initialGallery }: Props) {
         method: "POST",
         body: form,
       });
-      if (!res.ok) throw new Error("fail");
-      const data = (await res.json()) as { item: GalleryItem };
-      setGallery((prev) => [...prev, data.item]);
+      const data = (await res.json()) as {
+        item?: GalleryItem;
+        error?: string;
+      };
+      if (!res.ok) {
+        setMessage(data.error || "Ngarkimi dështoi.");
+        return;
+      }
+      if (data.item) setGallery((prev) => [...prev, data.item!]);
       setMessage("Fotoja u ngarkua. Ruaj për të konfirmuar renditjen.");
     } catch {
       setMessage("Ngarkimi dështoi.");

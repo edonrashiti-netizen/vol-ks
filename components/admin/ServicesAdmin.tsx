@@ -49,9 +49,15 @@ export function ServicesAdmin({ initialServices }: Props) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ services }),
       });
-      if (!res.ok) throw new Error("fail");
-      const data = (await res.json()) as { services: ServiceItem[] };
-      setServices(data.services);
+      const data = (await res.json()) as {
+        services?: ServiceItem[];
+        error?: string;
+      };
+      if (!res.ok) {
+        setMessage(data.error || "Diçka shkoi keq.");
+        return;
+      }
+      if (data.services) setServices(data.services);
       setMessage("U ruajt.");
     } catch {
       setMessage("Diçka shkoi keq.");
