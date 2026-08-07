@@ -1,4 +1,4 @@
-import { put, list, del } from "@vercel/blob";
+import { put, list, del, get } from "@vercel/blob";
 import { promises as fs } from "fs";
 import path from "path";
 import { seedContent } from "./seed";
@@ -6,9 +6,12 @@ import type { GalleryItem, ServiceItem, SiteContent } from "./types";
 
 const BLOB_PATHNAME = "vol-ks/content.json";
 const LOCAL_DATA_PATH = path.join(process.cwd(), "data", "content.json");
+const BLOB_ACCESS = "private" as const;
 
-function hasBlobToken(): boolean {
-  return Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+export function isBlobConfigured(): boolean {
+  return Boolean(
+    process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID,
+  );
 }
 
 async function readLocal(): Promise<SiteContent | null> {
@@ -27,20 +30,35 @@ async function writeLocal(content: SiteContent): Promise<void> {
 
 async function readBlob(): Promise<SiteContent | null> {
   try {
-    const { blobs } = await list({ prefix: BLOB_PATHNAME, limit: 1 });
-    const match = blobs.find((b) => b.pathname === BLOB_PATHNAME);
-    if (!match) return null;
-    const res = await fetch(match.url, { cache: "no-store" });
-    if (!res.ok) return null;
-    return (await res.json()) as SiteContent;
+    const result = await get(BLOB_PATHNAME, {
+      access: BLOB_ACCESS,
+      useCache: false,
+    });
+    if (!result || result.statusCode !== 200 || !result.stream) return null;
+
+    const text = await new Response(result.stream).text();
+    return JSON.parse(text) as SiteContent;
   } catch {
-    return null;
+    try {
+      const { blobs } = await list({ prefix: BLOB_PATHNAME, limit: 5 });
+      const match = blobs.find((b) => b.pathname === BLOB_PATHNAME);
+      if (!match) return null;
+      const viaGet = await get(match.url, {
+        access: BLOB_ACCESS,
+        useCache: false,
+      });
+      if (!viaGet || viaGet.statusCode !== 200 || !viaGet.stream) return null;
+      const text = await new Response(viaGet.stream).text();
+      return JSON.parse(text) as SiteContent;
+    } catch {
+      return null;
+    }
   }
 }
 
 async function writeBlob(content: SiteContent): Promise<void> {
   await put(BLOB_PATHNAME, JSON.stringify(content), {
-    access: "public",
+    access: BLOB_ACCESS,
     addRandomSuffix: false,
     allowOverwrite: true,
     contentType: "application/json",
@@ -48,7 +66,7 @@ async function writeBlob(content: SiteContent): Promise<void> {
 }
 
 export async function getContent(): Promise<SiteContent> {
-  const stored = hasBlobToken() ? await readBlob() : await readLocal();
+  const stored = isBlobConfigured() ? await readBlob() : await readLocal();
   if (!stored) return structuredClone(seedContent);
 
   return {
@@ -63,15 +81,14 @@ export async function saveContent(content: SiteContent): Promise<void> {
     gallery: content.gallery.map((g, i) => ({ ...g, order: i })),
   };
 
-  if (hasBlobToken()) {
+  if (isBlobConfigured()) {
     await writeBlob(normalized);
     return;
   }
 
-  // Vercel serverless filesystem is not writable/persistent.
   if (process.env.VERCEL) {
     throw new Error(
-      "BLOB_READ_WRITE_TOKEN mungon. Krijo Vercel Blob store dhe ridéploy.",
+      "Blob nuk është i lidhur. Lidh Blob store me projektin dhe ridéploy.",
     );
   }
 
@@ -82,30 +99,44 @@ export async function saveServices(services: ServiceItem[]): Promise<SiteContent
   const content = await getContent();
   content.services = services.map((s, i) => ({ ...s, order: i }));
   await saveContent(content);
-  return content;
+  return getContent();
 }
 
 export async function saveGallery(gallery: GalleryItem[]): Promise<SiteContent> {
   const content = await getContent();
   content.gallery = gallery.map((g, i) => ({ ...g, order: i }));
   await saveContent(content);
-  return content;
+  return getContent();
+}
+
+/** Public URL path for serving a private blob through our API. */
+export function blobProxyPath(pathname: string): string {
+  return `/api/blob/${pathname.replace(/^\/+/, "")}`;
+}
+
+export function isBlobProxySrc(src: string): boolean {
+  return src.startsWith("/api/blob/");
+}
+
+export function pathnameFromProxySrc(src: string): string | null {
+  if (!isBlobProxySrc(src)) return null;
+  return decodeURIComponent(src.replace(/^\/api\/blob\//, ""));
 }
 
 export async function uploadGalleryImage(
   file: File,
 ): Promise<{ url: string }> {
-  if (hasBlobToken()) {
+  if (isBlobConfigured()) {
     const blob = await put(`vol-ks/gallery/${Date.now()}-${file.name}`, file, {
-      access: "public",
+      access: BLOB_ACCESS,
       addRandomSuffix: true,
     });
-    return { url: blob.url };
+    return { url: blobProxyPath(blob.pathname) };
   }
 
   if (process.env.VERCEL) {
     throw new Error(
-      "BLOB_READ_WRITE_TOKEN mungon. Krijo Vercel Blob store dhe ridéploy.",
+      "Blob nuk është i lidhur. Lidh Blob store me projektin dhe ridéploy.",
     );
   }
 
@@ -118,11 +149,23 @@ export async function uploadGalleryImage(
 }
 
 export async function deleteBlobIfNeeded(src: string): Promise<void> {
-  if (!hasBlobToken()) return;
-  if (!src.startsWith("http")) return;
+  if (!isBlobConfigured()) return;
+  const pathname = pathnameFromProxySrc(src);
+  if (!pathname && !src.startsWith("http")) return;
   try {
-    await del(src);
+    await del(pathname || src);
   } catch {
     // ignore missing blob
   }
+}
+
+export async function streamBlob(
+  pathname: string,
+): Promise<{ stream: ReadableStream<Uint8Array>; contentType: string } | null> {
+  const result = await get(pathname, { access: BLOB_ACCESS });
+  if (!result || result.statusCode !== 200 || !result.stream) return null;
+  return {
+    stream: result.stream,
+    contentType: result.blob.contentType || "application/octet-stream",
+  };
 }
