@@ -20,8 +20,12 @@ export const metadata: Metadata = {
   description:
     "Servis i dedikuar vetëm për automjetet Volvo në Fushë Kosovë, Uglarë. Diagnostikim, mirëmbajtje dhe riparim profesional.",
   icons: {
-    icon: [{ url: "/brand/icon.png", type: "image/png" }],
-    apple: [{ url: "/brand/icon.png" }],
+    icon: [
+      { url: "/icon.png", type: "image/png", sizes: "192x192" },
+      { url: "/brand/logo.png", type: "image/png", sizes: "438x438" },
+    ],
+    shortcut: "/favicon.png",
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
   },
   manifest: "/site.webmanifest",
 };
